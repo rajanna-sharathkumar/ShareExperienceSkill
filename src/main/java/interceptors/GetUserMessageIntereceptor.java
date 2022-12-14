@@ -23,8 +23,8 @@ public class GetUserMessageIntereceptor implements RequestInterceptor {
             String cName = currentSessionAttributes.get(USER_NAME_SESSION_KEY).toString();
             Optional<FactMessage> message = getMessageForUser(cName);
             if(message.isPresent()){
-                currentSessionAttributes.put(USER_MESSAGE_FACT_ID_SESSION_KEY, message.get());
-                currentSessionAttributes.put(USER_MESSAGE_FROM_SESSION_KEY, message.get());
+                currentSessionAttributes.put(USER_MESSAGE_FACT_ID_SESSION_KEY, message.get().getFactId());
+                currentSessionAttributes.put(USER_MESSAGE_FROM_SESSION_KEY, message.get().getMessageFromUserName());
             }
         }
     }
