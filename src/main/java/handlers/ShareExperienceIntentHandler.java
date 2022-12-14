@@ -1,5 +1,8 @@
 package handlers;
 
+import static util.SkillKeys.PREVIOUS_EXPERIENCE_SESSION_KEY;
+import static util.SkillKeys.SHARE_EXPERIENCE_INTENT;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,28 +14,23 @@ import com.amazon.ask.model.Response;
 public class ShareExperienceIntentHandler implements IntentRequestHandler {
     @Override
     public boolean canHandle(HandlerInput handlerInput, IntentRequest intentRequest) {
-        System.out.println("Slots: " + intentRequest.getIntent().getSlots());
-        System.out.println("Session Attributes: " +handlerInput.getRequestEnvelope().getSession().getAttributes());
-        return intentRequest.getIntent().getName().equals("ShareExperienceToUserIntent");
+        return intentRequest.getIntent().getName().equals(SHARE_EXPERIENCE_INTENT);
     }
 
     @Override
     public Optional<Response> handle(HandlerInput handlerInput, IntentRequest intentRequest) {
 
+        String speechText;
         Map<String, Object> currentSessionAttributes = handlerInput.getAttributesManager().getSessionAttributes();
 
-        if (currentSessionAttributes.size() == 0) {
-            currentSessionAttributes.put("Count", 1);
-        } else {
-            currentSessionAttributes.put("Count", (int)currentSessionAttributes.get("Count") + 1);
-        }
 
-        String speechText;
-        if (intentRequest.getIntent().getSlots() != null
+        if (!currentSessionAttributes.containsKey(PREVIOUS_EXPERIENCE_SESSION_KEY)) {
+            speechText = "Sorry, you don't have any experience to share.";
+        } else if (intentRequest.getIntent().getSlots() != null
             && intentRequest.getIntent().getSlots().get("user") != null
             && intentRequest.getIntent().getSlots().get("user").getValue() != null) {
-            final String userName = intentRequest.getIntent().getSlots().get("user").getValue();
-            speechText = "Sorry, this feature is not available yet! Stay tuned to share the experience with " + userName;
+            final String targetUserName = intentRequest.getIntent().getSlots().get("user").getValue();
+            speechText = String.format("I would like to share the experience with %s, But this feature is not available yet!", targetUserName);
         } else {
             speechText = "With whom do you wanna share this experience?";
         }
