@@ -38,7 +38,6 @@ public class ShareExperienceIntentHandler implements IntentRequestHandler {
         }
 
         return handlerInput.getResponseBuilder()
-            .withSpeech()
                            .withSpeech(speechText)
                            .withReprompt(speechText)
                            .build();
