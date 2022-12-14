@@ -19,7 +19,8 @@ public class ShareExperienceSkillHandler extends SkillStreamHandler {
                          new YesIntentHandler(),
                          new SimpleHelloIntentHandler(),
                          new ShareExperienceIntentHandler(),
-                         new SaveUserNameIntentHandler()
+                         new SaveUserNameIntentHandler(),
+                         new ShareFartIntentHandler()
                      )
                      .addExceptionHandlers(new GenericExceptionHandler())
                      .addRequestInterceptors(new GetUserNameRequestIntereceptor())

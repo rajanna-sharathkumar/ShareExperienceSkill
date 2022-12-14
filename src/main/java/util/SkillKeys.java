@@ -6,6 +6,7 @@ public class SkillKeys {
     public static final String SAVE_USER_NAME_INTENT = "SaveUserNameIntent";
     public static final String LAUNCH_REQUEST_INTENT = "LaunchRequestIntent";
     public static final String SHARE_EXPERIENCE_INTENT = "ShareExperienceToUserIntent";
+    public static final String SHARE_FART_INTENT = "ShareFartIntent";
     public static final String YES_INTENT = "AMAZON.YesIntent";
 
     //utterance slot keys

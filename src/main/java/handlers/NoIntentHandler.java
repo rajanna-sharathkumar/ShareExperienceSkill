@@ -18,7 +18,7 @@ public class NoIntentHandler implements IntentRequestHandler {
         final String speechText = "ok.";
         return handlerInput.getResponseBuilder()
                            .withSpeech(speechText)
-                            .withShouldEndSession(true)
+                           .withShouldEndSession(true)
                            .build();
     }
 
