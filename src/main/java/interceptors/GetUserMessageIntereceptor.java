@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 
+import util.DynamoDbHelper;
 import util.FactMessage;
 
 public class GetUserMessageIntereceptor implements RequestInterceptor {
@@ -21,16 +22,12 @@ public class GetUserMessageIntereceptor implements RequestInterceptor {
         if (currentSessionAttributes.containsKey(USER_NAME_SESSION_KEY)) {
             System.out.println("nnnnn user name is there");
             String cName = currentSessionAttributes.get(USER_NAME_SESSION_KEY).toString();
-            Optional<FactMessage> message = getMessageForUser(cName);
+            DynamoDbHelper dbHelper = new DynamoDbHelper();
+            Optional<FactMessage> message = dbHelper.getMessageForUser(cName);
             if(message.isPresent()){
                 currentSessionAttributes.put(USER_MESSAGE_FACT_ID_SESSION_KEY, message.get().getFactId());
                 currentSessionAttributes.put(USER_MESSAGE_FROM_SESSION_KEY, message.get().getMessageFromUserName());
             }
         }
-    }
-
-    private Optional<FactMessage> getMessageForUser(String userName){
-        // TODO
-        return Optional.empty();
     }
 }

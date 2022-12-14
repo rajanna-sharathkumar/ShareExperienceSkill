@@ -10,6 +10,8 @@ import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import util.DynamoDbHelper;
+
 public class GetUserNameRequestIntereceptor implements RequestInterceptor {
 
     @Override
@@ -19,7 +21,8 @@ public class GetUserNameRequestIntereceptor implements RequestInterceptor {
         if (!currentSessionAttributes.containsKey(USER_NAME_SESSION_KEY)) {
             JsonNode node = input.getRequestEnvelopeJson();
             String cid = node.get("session").get("user").get("userId").textValue();
-            Optional<String> cName = getCustomerNameFromDDB(cid);
+            DynamoDbHelper dbHelper = new DynamoDbHelper();
+            Optional<String> cName = dbHelper.getCustomerNameFromDDB(cid);
             if(cName.isPresent()){
                 currentSessionAttributes.put(USER_NAME_SESSION_KEY, cName.get());
             } else {
@@ -27,10 +30,5 @@ public class GetUserNameRequestIntereceptor implements RequestInterceptor {
             }
 
         }
-    }
-
-    private Optional<String> getCustomerNameFromDDB(String cid){
-        // TODO
-        return Optional.empty();
     }
 }

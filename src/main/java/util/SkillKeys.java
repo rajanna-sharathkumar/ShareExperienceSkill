@@ -19,7 +19,7 @@ public class SkillKeys {
     public static final String PREVIOUS_EXPERIENCE_SESSION_KEY = "lastExperience";
 
     //prompts
-    public static final String UNKNOWN_USER_PROMPT= ", What is your name? ";
+    public static final String UNKNOWN_USER_PROMPT= " What is your name?";
     public static final String UNKNOWN_USER_RE_PROMPT= "You can tell me your name by saying My name is ...";
     public static final String SAVE_USER_NAME_PROMPT = "Hi %s! Do you want to hear a fact?";
     public static final String SAVE_USER_NAME_RE_PROMPT = "Sorry, I didn't understand. Do you want to hear a fact?";

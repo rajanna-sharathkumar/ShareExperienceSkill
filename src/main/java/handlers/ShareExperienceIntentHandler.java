@@ -15,6 +15,8 @@ import com.amazon.ask.dispatcher.request.handler.impl.IntentRequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 
+import util.DynamoDbHelper;
+
 public class ShareExperienceIntentHandler implements IntentRequestHandler {
     @Override
     public boolean canHandle(HandlerInput handlerInput, IntentRequest intentRequest) {
@@ -35,12 +37,13 @@ public class ShareExperienceIntentHandler implements IntentRequestHandler {
             && intentRequest.getIntent().getSlots().get("user").getValue() != null) {
             final String targetUserName = intentRequest.getIntent().getSlots().get("user").getValue();
 
-            if(!userExists(targetUserName)){
+            DynamoDbHelper dbHelper = new DynamoDbHelper();
+            if(!dbHelper.userExists(targetUserName)){
                 speechText = TARGET_USER_DOES_NOT_EXIST + targetUserName + ". " + TARGET_USER_NAME_ELICITATION;
             } else{
                 speechText = MESSAGE_SHARE_COMPLETE;
                 shouldEndSession = true;
-                saveMessageToDDB(currentSessionAttributes.get(USER_NAME_SESSION_KEY).toString(), targetUserName,
+                dbHelper.saveMessageToDDB(currentSessionAttributes.get(USER_NAME_SESSION_KEY).toString(), targetUserName,
                         currentSessionAttributes.get(PREVIOUS_EXPERIENCE_SESSION_KEY).toString());
             }
 
@@ -54,14 +57,5 @@ public class ShareExperienceIntentHandler implements IntentRequestHandler {
                            .withReprompt(speechText)
                            .withShouldEndSession(shouldEndSession)
                            .build();
-    }
-
-    private void saveMessageToDDB(String messageFromName, String messageToName, String message){
-        // TODO
-    }
-
-    private boolean userExists(String userName){
-        // TODO
-        return true;
     }
 }
