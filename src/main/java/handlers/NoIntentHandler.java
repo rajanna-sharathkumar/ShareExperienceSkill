@@ -15,9 +15,10 @@ public class NoIntentHandler implements IntentRequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput handlerInput, IntentRequest intentRequest) {
-        final String speechText = "Sorry I didn't understand";
+        final String speechText = "ok.";
         return handlerInput.getResponseBuilder()
                            .withSpeech(speechText)
+                            .withShouldEndSession(true)
                            .build();
     }
 

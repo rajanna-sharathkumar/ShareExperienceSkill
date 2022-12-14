@@ -2,9 +2,11 @@ package handlers;
 
 import static util.SkillData.FACT_STRINGS;
 import static util.SkillKeys.DO_YOU_WANT_TO_SHARE_PROMPT;
+import static util.SkillKeys.MESSAGE_SHARE_COMPLETE;
 import static util.SkillKeys.PREVIOUS_EXPERIENCE_SESSION_KEY;
 import static util.SkillKeys.PREVIOUS_INTENT_SESSION_KEY;
 import static util.SkillKeys.SAVE_USER_NAME_INTENT;
+import static util.SkillKeys.SHARE_EXPERIENCE_INTENT;
 import static util.SkillKeys.YES_INTENT;
 import static util.SkillKeys.YOU_CAN_SHARE_PROMPT;
 
@@ -28,10 +30,12 @@ public class YesIntentHandler implements IntentRequestHandler {
     public Optional<Response> handle(HandlerInput handlerInput, IntentRequest intentRequest) {
         final Map<String, Object> currentSessionAttributes = handlerInput.getAttributesManager().getSessionAttributes();
         String speechText;
+        boolean shouldEndSession = false;
 
         if (currentSessionAttributes.containsKey(PREVIOUS_INTENT_SESSION_KEY)) {
             switch (currentSessionAttributes.get(PREVIOUS_INTENT_SESSION_KEY).toString()) {
                 case SAVE_USER_NAME_INTENT:
+                    // finished
                     speechText = RandomEntitySelector.getRandomObject(FACT_STRINGS);
                     currentSessionAttributes.put(PREVIOUS_EXPERIENCE_SESSION_KEY, speechText);
                     speechText = speechText + ", " + YOU_CAN_SHARE_PROMPT;
@@ -44,6 +48,7 @@ public class YesIntentHandler implements IntentRequestHandler {
         return handlerInput.getResponseBuilder()
                            .withSpeech(speechText)
                            .withReprompt(speechText)
+                           .withShouldEndSession(shouldEndSession)
                            .build();
     }
 }

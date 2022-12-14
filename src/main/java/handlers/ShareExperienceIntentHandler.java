@@ -1,7 +1,11 @@
 package handlers;
 
+import static util.SkillKeys.MESSAGE_SHARE_COMPLETE;
 import static util.SkillKeys.PREVIOUS_EXPERIENCE_SESSION_KEY;
 import static util.SkillKeys.SHARE_EXPERIENCE_INTENT;
+import static util.SkillKeys.TARGET_USER_DOES_NOT_EXIST;
+import static util.SkillKeys.TARGET_USER_NAME_ELICITATION;
+import static util.SkillKeys.USER_NAME_SESSION_KEY;
 
 import java.util.Map;
 import java.util.Optional;
@@ -22,7 +26,7 @@ public class ShareExperienceIntentHandler implements IntentRequestHandler {
 
         String speechText;
         Map<String, Object> currentSessionAttributes = handlerInput.getAttributesManager().getSessionAttributes();
-
+        boolean shouldEndSession = false;
 
         if (!currentSessionAttributes.containsKey(PREVIOUS_EXPERIENCE_SESSION_KEY)) {
             speechText = "Sorry, you don't have any experience to share.";
@@ -30,14 +34,34 @@ public class ShareExperienceIntentHandler implements IntentRequestHandler {
             && intentRequest.getIntent().getSlots().get("user") != null
             && intentRequest.getIntent().getSlots().get("user").getValue() != null) {
             final String targetUserName = intentRequest.getIntent().getSlots().get("user").getValue();
-            speechText = String.format("I would like to share the experience with %s, But this feature is not available yet!", targetUserName);
+
+            if(!userExists(targetUserName)){
+                speechText = TARGET_USER_DOES_NOT_EXIST + targetUserName + ". " + TARGET_USER_NAME_ELICITATION;
+            } else{
+                speechText = MESSAGE_SHARE_COMPLETE;
+                shouldEndSession = true;
+                saveMessageToDDB(currentSessionAttributes.get(USER_NAME_SESSION_KEY).toString(), targetUserName,
+                        currentSessionAttributes.get(PREVIOUS_EXPERIENCE_SESSION_KEY).toString());
+            }
+
+
         } else {
-            speechText = "With whom do you wanna share this experience?";
+            speechText = TARGET_USER_NAME_ELICITATION;
         }
 
         return handlerInput.getResponseBuilder()
                            .withSpeech(speechText)
                            .withReprompt(speechText)
+                           .withShouldEndSession(shouldEndSession)
                            .build();
+    }
+
+    private void saveMessageToDDB(String messageFromName, String messageToName, String message){
+        // TODO
+    }
+
+    private boolean userExists(String userName){
+        // TODO
+        return true;
     }
 }

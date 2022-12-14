@@ -15,6 +15,8 @@ import com.amazon.ask.dispatcher.request.handler.impl.IntentRequestHandler;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Response;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class SaveUserNameIntentHandler implements IntentRequestHandler {
     @Override
     public boolean canHandle(HandlerInput handlerInput, IntentRequest intentRequest) {
@@ -46,9 +48,18 @@ public class SaveUserNameIntentHandler implements IntentRequestHandler {
         Map<String, Object> currentSessionAttributes = handlerInput.getAttributesManager().getSessionAttributes();
         currentSessionAttributes.put(USER_NAME_SESSION_KEY, userName);
         String speechText = format(SAVE_USER_NAME_PROMPT, userName);
+
+        JsonNode node = handlerInput.getRequestEnvelopeJson();
+        String cid = node.get("session").get("user").get("userId").textValue();
+        saveUserNameToDDB(cid, userName);
         return handlerInput.getResponseBuilder()
                            .withSpeech(speechText)
                            .withReprompt(SAVE_USER_NAME_RE_PROMPT)
+                            .withShouldEndSession(false)
                            .build();
+    }
+
+    private void saveUserNameToDDB(String cid, String name){
+        // TODO
     }
 }

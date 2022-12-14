@@ -3,6 +3,7 @@ import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
 
 import handlers.*;
+import interceptors.GetUserMessageIntereceptor;
 import interceptors.GetUserNameRequestIntereceptor;
 import interceptors.SavePreviousIntentInterceptor;
 
@@ -23,6 +24,7 @@ public class ShareExperienceSkillHandler extends SkillStreamHandler {
                      .addExceptionHandlers(new GenericExceptionHandler())
                      .addRequestInterceptors(new GetUserNameRequestIntereceptor())
                      .addResponseInterceptors(new SavePreviousIntentInterceptor())
+                     .addRequestInterceptors(new GetUserMessageIntereceptor())
                      // Add your skill id below
                      //.withSkillId("")
                      .build();
